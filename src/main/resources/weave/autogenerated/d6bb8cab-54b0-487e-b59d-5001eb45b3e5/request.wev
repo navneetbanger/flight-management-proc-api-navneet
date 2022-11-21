@@ -1,0 +1,28 @@
+%dw 2.0
+
+type auto_d6bb8cab_54b0_487e_b59d_5001eb45b3e5_Output_Variables_booking_request = {
+  customerDetails: {
+    firstName?: String, 
+    lastName?: String, 
+    city?: String, 
+    customerRefNumber?: String, 
+    state?: String, 
+    _?: Any
+  }, 
+  paymentDetails: {
+    amount: Number, 
+    _?: Any
+  }, 
+  bookingDetails: {
+    travelDate: String, 
+    price: Number, 
+    destination: String, 
+    flightId: String, 
+    source: String, 
+    flightTime: String, 
+    flightNumber: String, 
+    _?: Any
+  }, 
+  _?: Any
+}
+

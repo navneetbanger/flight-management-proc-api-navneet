@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<sub-flow name="subflow-process-bookingSub_Flow" doc:id="13783a12-6b28-4487-9865-4685c9568d0d" >
+		<ee:transform doc:name="Transform Message" doc:id="7e2c3a8e-d095-48bb-8911-ba0454afdb19" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	bookingRefNumber : vars.bookingRefNumber,
+	customerRefNumber : vars.customerRefNumber,
+	flightId : vars.booking_request.bookingDetails.flightId,
+	seatNumber : (random() * 100) as String {format: "00"} ++ "A",
+	status : "confirmed",
+	bookingDate : now() as String {format: "y-MM-dd"}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload.seatNumber]" doc:name="seatNumber" doc:id="051003a6-3879-4f27-be99-2db65547750a" variableName="seatNumber"/>
+		<http:request method="GET" doc:name="flight-booking-sys-api" doc:id="c0d9e904-0ada-4bdb-912f-d2bd10c260f0" config-ref="HTTP_Request_configuration" url="http://flight-management-sys-api-navneet.us-e2.cloudhub.io/api/flights"/>
+		<set-variable value="#[payload]" doc:name="booking_response" doc:id="19a80ee9-6082-4763-8bce-09376a038cc3" variableName="booking_response"/>
+		<ee:transform doc:name="Transform Message" doc:id="4d3a19e2-48b3-4f50-9337-2011d19bc704" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	bookingStatus: "confirmed",
+	confirmationDetails:
+		{
+			bookingRefNumber: vars.bookingRefNumber,
+			flightNumber: vars.booking_request.bookingDetails.flightNumber,
+			source: vars.booking_request.bookingDetails.source,
+			destination: vars.booking_request.bookingDetails.destination,
+			travelDate: vars.booking_request.bookingDetails.travelDate,
+			departureTime: vars.booking_request.bookingDetails.flightTime,
+			amount: vars.booking_request.bookingDetails.price
+		},
+	customerDetails:
+		{
+			customerRefNumber: vars.customerRefNumber,
+			firstName: vars.booking_request.customerDetails.firstName,
+			lastName: vars.booking_request.customerDetails.lastName,
+			city: vars.booking_request.customerDetails.city,
+			state: vars.booking_request.customerDetails.state
+		}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+</mule>

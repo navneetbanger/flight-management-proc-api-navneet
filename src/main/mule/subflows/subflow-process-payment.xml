@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<sub-flow name="subflow-process-paymentSub_Flow" doc:id="140521b5-4b86-46df-8846-2af7b3c02d99" >
+		<set-variable value="#[vars.booking_request.paymentDetails.amount == vars.booking_request.bookingDetails.price]" doc:name="isValidPaymentAmount" doc:id="6b5c00b0-e3e5-409f-aa31-d4d67f11badf" variableName="isValidPaymentAmount"/>
+		<choice doc:name="isValidPayment?" doc:id="87371287-15a9-47d9-b501-71336ee8fab2" >
+			<when expression="#[vars.isValidPaymentAmount == true]">
+				<ee:transform doc:name="Transform Message" doc:id="84545584-c364-4cca-9df7-18e8d5f87dc5" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	paymentRefNumber : "pref_" ++ now() as Number {unit: "milliseconds"},
+	bookingRefNumber : vars.bookingRefNumber,
+	amount : vars.booking_request.paymentDetails.amount,
+	status : "confirmed",
+	paymentDate : now() as String {format: "y-MM-dd"}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<http:request method="GET" doc:name="Request" doc:id="b639797c-85c0-419e-ba40-34c6a54b549a" config-ref="HTTP_Request_configuration" url="http://flight-management-sys-api-navneet.us-e2.cloudhub.io/api/payment"/>
+			</when>
+		</choice>
+	</sub-flow>
+</mule>

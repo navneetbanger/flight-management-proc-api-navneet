@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="post:\flights:application\json:flight-management-proc-api-navneet-config" doc:id="c646eae2-80fa-4641-98ed-d812179ffb7f" >
+		<ee:transform doc:name="setVars" doc:id="2ffadfba-854a-4b72-bb8f-194ffb1358e5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="booking_request" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+				<ee:set-variable variableName="bookingRefNumber" ><![CDATA[%dw 2.0
+output application/json
+---
+uuid()]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<choice doc:name="is existing customer?" doc:id="41e41292-0ec6-4d42-8134-149ecf50aade" >
+			<when expression="#[isBlank(payload.customerDetails.customerRefNumber)]">
+				<flow-ref doc:name="create-customer" doc:id="ee3a3c60-ecf7-4d64-b978-f6084945d701" name="subflow-create-customerSub_Flow"/>
+			</when>
+			<when expression="#[not isBlank(payload.customerDetails.customerRefNumber)]">
+				<flow-ref doc:name="validate-customer" doc:id="55a2bb52-d214-441c-a69c-efd37b6fb5e0" name="subflow-validate-customerFlow"/>
+			</when>
+		</choice>
+		<flow-ref doc:name="process-payment" doc:id="633c3e58-a2d3-4e1c-b687-3dff8286d35b" name="subflow-process-paymentSub_Flow"/>
+		<flow-ref doc:name="process-booking" doc:id="24dd73c4-cc94-423a-a360-be9c53d00e5a" name="subflow-process-bookingSub_Flow"/>
+	</flow>
+</mule>

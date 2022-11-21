@@ -1,0 +1,25 @@
+%dw 2.0
+
+type auto_140521b5_4b86_46df_8846_2af7b3c02d99_Input_Payload = {
+  confirmationDetails: {
+    departureTime: String, 
+    bookingRefNumber: String, 
+    amount: Number, 
+    travelDate: String, 
+    destination: String, 
+    source: String, 
+    customerDetails: {
+      firstName?: String, 
+      lastName?: String, 
+      city?: String, 
+      customerRefNumber?: String, 
+      state?: String, 
+      _?: Any
+    }, 
+    flightNumber: String, 
+    _?: Any
+  }, 
+  bookingStatus: String, 
+  _?: Any
+}
+

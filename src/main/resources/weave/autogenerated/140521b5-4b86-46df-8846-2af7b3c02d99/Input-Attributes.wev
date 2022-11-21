@@ -1,0 +1,25 @@
+%dw 2.0
+
+type auto_140521b5_4b86_46df_8846_2af7b3c02d99_Input_Attributes = {|
+  remoteAddress?: String, 
+  localAddress?: String, 
+  clientCertificate?: {|
+    publicKey?: {|  |}, 
+    "type"?: String, 
+    encoded?: Binary
+  |}, 
+  uriParams?: {|  |}, 
+  queryParams?: {|  |}, 
+  statusCode?: Number, 
+  requestPath?: String, 
+  relativePath?: String, 
+  scheme?: String, 
+  version?: String, 
+  method?: String, 
+  reasonPhrase?: String, 
+  requestUri?: String, 
+  queryString?: String, 
+  headers: { _?: String }, 
+  listenerPath?: String
+|}
+

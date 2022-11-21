@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_1fc8eaf4_7d24_48f6_8f71_f9023e551ba3_Output_Variables_customerRefNumber = Any
+

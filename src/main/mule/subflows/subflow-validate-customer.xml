@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="subflow-validate-customerFlow" doc:id="d6bb8cab-54b0-487e-b59d-5001eb45b3e5" >
+		<set-variable value="#[vars.booking_request.customerDetails.customerRefNumber]" doc:name="Set Variable" doc:id="7f0cfb8c-7e76-4349-bfb6-cab700baebd8" variableName="customerRefNumber"/>
+		<ee:transform doc:name="Transform Message" doc:id="69701f0c-c47b-40d3-bef0-2a948f8a41a7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
